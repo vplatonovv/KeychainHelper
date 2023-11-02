@@ -33,28 +33,6 @@ public final class KeychainManager {
     }
     
     /**
-     Saves data in Keychain.
-     
-     - Parameters:
-     - data: Data to save.
-     - item: A data item.
-     */
-    public func save(_ data: Data, _ item: KeychainCredential) {
-        let query = [
-            kSecValueData: data,
-            kSecClass: kSecClassGenericPassword,
-            kSecAttrService: item.service,
-            kSecAttrAccount: item.account,
-        ] as [CFString : Any] as CFDictionary
-        
-        let status = SecItemAdd(query, nil)
-        
-        if status != errSecSuccess {
-            update(data, item)
-        }
-    }
-    
-    /**
      Deletes data from Keychain.
      
      - Parameter item: A data element.
@@ -143,5 +121,27 @@ private extension KeychainManager {
         SecItemCopyMatching(query, &result)
         
         return (result as? Data)
+    }
+    
+    /**
+     Saves data in Keychain.
+     
+     - Parameters:
+     - data: Data to save.
+     - item: A data item.
+     */
+    func save(_ data: Data, _ item: KeychainCredential) {
+        let query = [
+            kSecValueData: data,
+            kSecClass: kSecClassGenericPassword,
+            kSecAttrService: item.service,
+            kSecAttrAccount: item.account,
+        ] as [CFString : Any] as CFDictionary
+        
+        let status = SecItemAdd(query, nil)
+        
+        if status != errSecSuccess {
+            update(data, item)
+        }
     }
 }
